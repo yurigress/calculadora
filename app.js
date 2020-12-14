@@ -32,10 +32,12 @@ function calcular(numero1, operacao, numero2) {
 	}
 }
 
-function limpaCalculadora(inputResultado, calculadora) {
+function limpaCalculadora() {
+	const calculadora = window.document.querySelector('.calculadora');
+	const inputResultado = window.document.getElementById('resultado');
 	inputResultado.value = 0;
 	calculadora.dataset.primeiroValor = '';
-	calculadora.dataset.operdor = '';
+	calculadora.dataset.operador = '';
 	calculadora.dataset.botaoAnterior = 'C';
 	calculadora.dataset.segundoValor = '';
 }
@@ -49,13 +51,13 @@ function limpaCalculadora(inputResultado, calculadora) {
 function eventClickBotao(e) {
 	const calculadora = window.document.querySelector('.calculadora');
 	const botao = e.target;
-
 	const inputResultado = window.document.getElementById('resultado');
-	var value = botao.value;
-	var operacoes = ['-', '+', '/', '*', '=', 'C', 'del', '.'];
+
 	var primeiroValor = calculadora.dataset.primeiroValor;
 	var operador = calculadora.dataset.operador;
 	var segundoValor = inputResultado.value;
+	var value = botao.value;
+	var operacoes = ['-', '+', '/', '*', '=', 'C', 'del', '.'];
 
 	if (!operacoes.includes(value)) { // Somente números;
 		if (
@@ -67,15 +69,14 @@ function eventClickBotao(e) {
 		} else {
 			inputResultado.value += value;
 		}
-		// calculadora.dataset.primeiroNumero = inputResultado.value;
 		calculadora.dataset.botaoAnterior = 'numero';
 	} else {
 		switch (value) {
 			case 'C': // Limpar calculadora
-				limpaCalculadora(inputResultado, calculadora);
+				limpaCalculadora();
 				break;
 			case 'del': // Limpa operação
-				limpaCalculadora(inputResultado, calculadora);
+				inputResultado.value = '';
 				break;
 			case '=':
 				if (
@@ -87,7 +88,7 @@ function eventClickBotao(e) {
 				}
 
 				if (primeiroValor) {
-					if (calculadora.dataset.botaoAnteior === 'calcular') {
+					if (calculadora.dataset.botaoAnterior === 'calcular') {
 						primeiroValor = inputResultado.value;
 						segundoValor = calculadora.dataset.segundoValor;
 					}
@@ -96,7 +97,7 @@ function eventClickBotao(e) {
 				}
 
 				calculadora.dataset.segundoValor = segundoValor;
-				calculadora.dataset.botaoAnteior = 'calcular';
+				calculadora.dataset.botaoAnterior = 'calcular';
 				break;
 			case '.':
 				if (!inputResultado.value.includes('.')) { // Caso ainda não tenha o ponto decimal
@@ -120,10 +121,10 @@ function eventClickBotao(e) {
 
 				if (
 					primeiroValor && operador
-					&& calculadora.dataset.botaoAnterior !== 'operador'
-					&& calculadora.dataset.botaoAnterior !== 'calcular'
+					&& (calculadora.dataset.botaoAnterior !== 'operador'
+					&& calculadora.dataset.botaoAnterior !== 'calcular')
 				) {
-					const calculoValor = calcular(primeiroValor, operador, segundoValor);
+					const calculoValor = calcular(primeiroValor, value, segundoValor);
 					inputResultado.value = calculoValor;
 					calculadora.dataset.segundoValor = calculoValor;
 					calculadora.dataset.primeiroValor = calculoValor;
