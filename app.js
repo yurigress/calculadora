@@ -1,3 +1,8 @@
+/**
+ * Valida se o valor é zero
+ * @param valor
+ * @returns {boolean}
+ */
 function isZero(valor) {
 	return (valor === '0' || valor === 0);
 }
